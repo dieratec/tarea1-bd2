@@ -8,6 +8,11 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 django = "^4.1.7"
+pillow = "^9.4.0"
+mysqlclient = "^2.1.1"
+redis = "^4.5.1"
+ravendb = "^5.2.2"
+pymongo = "^4.3.3"
 
 
 [build-system]
