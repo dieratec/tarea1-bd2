@@ -10,5 +10,5 @@ class Profile(models.Model):
     )
     name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
-    birthdate = models.DateField()
-    photo = models.ImageField(upload_to='profile_pics')
+    birthdate = models.DateField(null=True)
+    photo = models.ImageField(upload_to='profile_pics', null=True)

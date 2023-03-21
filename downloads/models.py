@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 class Download(models.Model):
     downloaded_by = models.ForeignKey(
         get_user_model(),
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
     )
     downloaded_at = models.DateTimeField(auto_now_add=True)
     dataset_download = models.JSONField()
