@@ -13,3 +13,5 @@ class Download(models.Model):
         on_delete=models.DO_NOTHING
     )
     download_at = models.DateTimeField(auto_now_add=True)
+    dataset_download = models.JSONField()
+    dataset_id = models.BigIntegerField()
