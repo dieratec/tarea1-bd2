@@ -15,6 +15,10 @@ ravendb = "^5.2.2"
 pymongo = "^4.3.3"
 
 
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.0.0"
+black = "^23.1.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
