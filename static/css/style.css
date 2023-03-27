@@ -1,0 +1,15 @@
+html, body {
+    background-color: #425C5E;
+}
+
+.title {
+    color: #FFFFFF;
+}
+
+p {
+    color: #fff;
+}
+
+#app-navbar {
+    background-color: transparent !important;
+}

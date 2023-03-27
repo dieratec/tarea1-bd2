@@ -6,6 +6,9 @@ class User(AbstractUser):
     birthdate = models.DateField(blank=True, null=True)
     photo = models.ImageField(blank=True, null=True)
 
+    def __str__(self) -> str:
+        return self.username
+
 
 class Download(models.Model):
     download_by = models.ForeignKey(
