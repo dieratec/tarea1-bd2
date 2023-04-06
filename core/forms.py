@@ -9,6 +9,9 @@ class RegistrationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", )
+        widgets = {
+            'username': forms.Textarea(attrs={'class': 'input'})
+        }
 
 
 class UpdateProfileForm(UserChangeForm):
