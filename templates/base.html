@@ -10,7 +10,7 @@
 </head>
 <body>
     {% if user.is_authenticated %}
-    <nav class="navbar is-transparent is-fixed-top" id="app-navbar">
+    <nav class="navbar is-link is-fixed-top" id="app-navbar">
         <div class="navbar-brand">
             <div class="navbar-item">
                 <a href="{% url 'home' %}" class="title">
@@ -20,8 +20,13 @@
         </div>
         <div class="navbar-end">
             <div class="navbar-item">
-                    {{ user.username }}
-                    <p><a class="button is-info" href="{% url 'logout' %}">Log Out</a></p>
+                <a href="{% url 'upload-dataset' %}" class="button is-primary">Cargar Dataset</a>
+            </div>
+            <div class="navbar-item">
+                {{ user.username }}
+            </div>
+            <div class="navbar-item">
+                    <p><a class="button is-danger" href="{% url 'logout' %}">Salir</a></p>
                 </div>
             </div>
         </nav>
