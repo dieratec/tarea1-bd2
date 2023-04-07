@@ -31,7 +31,7 @@ class UploadDatasetView(LoginRequiredMixin, FormView):
         if form.is_valid():
             with store.open_session() as session:
                 dataset = models.Dataset(
-                    None,   # type: ignore
+                    None,  # type: ignore
                     form.cleaned_data['name'],
                     form.cleaned_data['description'],
                     self.request.user.id,  # type: ignore
@@ -45,7 +45,7 @@ class UploadDatasetView(LoginRequiredMixin, FormView):
                     'image.png',
                     image.read(),
                     image.content_type
-                )  # type: ignore
+                )
 
                 for file in files:
                     session.advanced.attachments.store(
