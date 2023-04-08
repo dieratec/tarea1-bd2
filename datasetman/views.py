@@ -1,4 +1,5 @@
 from datetime import datetime
+from base64 import b64encode
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,6 +14,23 @@ store.initialize()
 
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        with store.open_session() as session:
+            query = session.query(object_type=models.Dataset)
+            datasets = list(query)
+            images = {}
+
+            for dataset in datasets:
+                print(dataset.upload_date)
+                dataset.upload_date = datetime.strptime(dataset.upload_date[:-3], "%Y-%m-%dT%H:%M:%S.%f")
+                images[dataset.Id] = b64encode(session.advanced.attachments.get(dataset.Id, "image.png").data).decode()
+
+            context['datasets'] = list(query)
+            context['dataset_images'] = images
+        return context
 
 
 class UploadDatasetView(LoginRequiredMixin, FormView):

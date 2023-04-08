@@ -1,12 +1,35 @@
 {% extends "base.html" %}
+{% load dataset_filters %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        Hi {{ user.username }}!
-        <p><a href="{% url 'logout' %}">Log Out</a></p>
-    {% else %}
-        <p>TODO</p>
-    {% endif %}
+    {% for dataset in datasets %}
+        <article class="media">
+            <figure class="media-left">
+                <p class="image is-64x64">
+                    <img src="data:image/png;base64,{{ dataset_images|get_dict_value:dataset.Id }}">
+                </p>
+            </figure>
+            <div class="media-content">
+                <div class="content">
+                    <strong>{{ dataset.name }}</strong> Por: <strong>{{ dataset.user_id|uploaded_by_name_user }}</strong> <small>{{dataset.user_id|uploaded_by_user}}</small> <small>{{ dataset.upload_date }}</small>
+                    <br>
+                    {{ dataset.description }}
+                    <br>
+                    <a href="">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              </svg>                              
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </article>
+        <p class="">
+            {{ dataset.Id|parse_raven_dataset_id }}
+        </p>
+    {% endfor %}
 {% endblock %}

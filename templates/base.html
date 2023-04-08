@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,21 +20,37 @@
         </div>
         <div class="navbar-end">
             <div class="navbar-item">
-                <a href="{% url 'upload-dataset' %}" class="button is-primary">Cargar Dataset</a>
+                <a href="{% url 'upload-dataset' %}" class="button is-primary">
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m0-3l-3-3m0 0l-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75" />
+                          </svg>
+                    </span>
+                    <span>Cargar Dataset</span>
+                </a>
             </div>
             <div class="navbar-item">
                 {{ user.username }}
             </div>
             <div class="navbar-item">
-                    <p><a class="button is-danger" href="{% url 'logout' %}">Salir</a></p>
-                </div>
+                <p>
+                    <a class="button is-danger" href="{% url 'logout' %}">
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                          </svg>
+                    </span>
+                    <span>Salir</span>
+                    </a>
+                </p>
             </div>
-        </nav>
+        </div>
+    </nav>
     {% endif %}
-<section class="section">
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
-</section>
+    <section class="section mt-5">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </section>
 </body>
 </html>
