@@ -1,12 +1,19 @@
+import zipfile
+import json
+
 from datetime import datetime
 from base64 import b64encode
+
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 
 from ravendb import DocumentStore
 
 from . import forms, models
+
+from core import models as core_models
 
 store = DocumentStore('http://localhost:8080', 'dataset_store')
 store.initialize()
@@ -20,13 +27,21 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
         with store.open_session() as session:
             query = session.query(object_type=models.Dataset)
+
+            if (self.request.GET.get('user_id')):
+                query = query.where_equals("user_id", self.request.GET.get('user_id'))
+
+            if (self.request.GET.get('username')):
+                users = core_models.User.objects.all().filter(username__startswith=self.request.GET.get('username'))
+                user_ids = [user.pk for user in users]
+                query = query.where_in("user_id", user_ids)
+
             datasets = list(query)
             images = {}
 
             for dataset in datasets:
-                print(dataset.upload_date)
-                dataset.upload_date = datetime.strptime(dataset.upload_date[:-3], "%Y-%m-%dT%H:%M:%S.%f")
-                images[dataset.Id] = b64encode(session.advanced.attachments.get(dataset.Id, "image.png").data).decode()
+                dataset.upload_date = datetime.strptime(dataset.upload_date[:-3], "%Y-%m-%dT%H:%M:%S.%f")  # type: ignore
+                images[dataset.Id] = b64encode(session.advanced.attachments.get(dataset.Id, "image.png").data).decode()  # type: ignore
 
             context['datasets'] = list(query)
             context['dataset_images'] = images
@@ -76,3 +91,65 @@ class UploadDatasetView(LoginRequiredMixin, FormView):
                 session.save_changes()
 
         return self.form_valid(form)
+
+
+class DatasetDetailView(LoginRequiredMixin, TemplateView):
+    template_name = 'datasets/detail-dataset.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        dataset_id = kwargs['dataset_id']
+
+        with store.open_session() as session:
+            dataset = session.load(f"datasets/{dataset_id}")
+            dataset.upload_date = datetime.strptime(dataset.upload_date[:-3], "%Y-%m-%dT%H:%M:%S.%f")  # type: ignore
+            image = b64encode(session.advanced.attachments.get(dataset.Id, "image.png").data).decode()  # type: ignore
+            context['dataset'] = dataset
+            context['dataset_image'] = image
+
+        return context
+
+
+def download_dataset(request, dataset_id):
+    response = HttpResponse(content_type='application/zip')
+    zip_filename = f"{dataset_id}"
+
+    with store.open_session() as session:
+        dataset: models.Dataset = session.load(f"datasets/{dataset_id}")  # type: ignore
+        uploaded_by = core_models.User.objects.get(pk=dataset.user_id)
+        dataset_attachments_details = session.advanced.attachments.get_names(dataset)
+
+        zip_file = zipfile.ZipFile(response, 'x')  # type: ignore
+
+        for attachment_detail in dataset_attachments_details:
+            attachment = session.advanced.attachments.get(dataset.Id, attachment_detail.name)
+            zip_file.writestr(attachment_detail.name, attachment.data)  # type: ignore
+
+        dataset_details = {
+            'user': {
+                'username': uploaded_by.username,
+                'first_name': uploaded_by.first_name,
+                'last_name': uploaded_by.last_name,
+                'birthdate': uploaded_by.birthdate,
+                'user_id': uploaded_by.pk,
+                'email': uploaded_by.email,
+            },
+            'name': dataset.name,
+            'description': dataset.description,
+            'upload_time': dataset.upload_date,
+            'dataset_id': dataset.Id
+        }
+
+        zip_file.writestr("details.json", str.encode(json.dumps(dataset_details, sort_keys=True, indent=4)))
+
+        zip_file.close()
+
+        download_reference = core_models.Download()
+        download_reference.download_by = request.user
+        download_reference.dataset_download = dataset_details
+        download_reference.dataset_id = dataset.Id
+        download_reference.save()
+
+    response['Content-Disposition'] = f"attachment; filename={zip_filename}.zip"
+
+    return response

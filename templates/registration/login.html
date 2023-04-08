@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Log In{% endblock %}
+{% block title %}Ingresar{% endblock %}
 
 {% block content %}
-<h1 class="title">Data Sharing App</h1>
 
-<div>
+<div class="box block">
+  <div class="block">
+    <h1 class="title">Data Sharing App</h1>
+  </div>
   <form method="post">
     {% csrf_token %}
     <div class="field">

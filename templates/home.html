@@ -4,6 +4,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<div class="box block">
     {% for dataset in datasets %}
         <article class="media">
             <figure class="media-left">
@@ -13,11 +14,11 @@
             </figure>
             <div class="media-content">
                 <div class="content">
-                    <strong>{{ dataset.name }}</strong> Por: <strong>{{ dataset.user_id|uploaded_by_name_user }}</strong> <small>{{dataset.user_id|uploaded_by_user}}</small> <small>{{ dataset.upload_date }}</small>
+                    <strong>{{ dataset.name }}</strong> Por: <strong>{{ dataset.user_id|uploaded_by_name_user }}</strong> <small>{{dataset.user_id|uploaded_by_user}}</small> <small>{{ dataset.upload_date|timesince }}</small>
                     <br>
                     {{ dataset.description }}
                     <br>
-                    <a href="">
+                    <a href="{% url 'detail-dataset' dataset.Id|parse_raven_dataset_id %}">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
@@ -28,8 +29,10 @@
                 </div>
             </div>
         </article>
-        <p class="">
-            {{ dataset.Id|parse_raven_dataset_id }}
-        </p>
+    {% empty %}
+        <h2 class="subtitle is-2">
+            No hay datasets a mostrar, prueba a buscar o a <a href="{% url 'upload-dataset' %}" class="">cargar uno</a>
+        </h2>
     {% endfor %}
+</div>
 {% endblock %}

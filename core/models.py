@@ -17,4 +17,4 @@ class Download(models.Model):
     )
     download_at = models.DateTimeField(auto_now_add=True)
     dataset_download = models.JSONField()
-    dataset_id = models.BigIntegerField()
+    dataset_id = models.CharField(max_length=255)

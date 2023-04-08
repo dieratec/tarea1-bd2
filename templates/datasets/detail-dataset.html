@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load dataset_filters %}
+
+{% block title %}Detalles Dataset / {{ dataset.Id|parse_raven_dataset_id }}{% endblock %}
+
+{% block content %}
+<div class="block">
+    <h1 class="title">Detalles del Dataset</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-header-title title">
+            {{ dataset.name }}
+        </h1>
+        <div class="card-header-icon">
+            <a href="{% url 'download-dataset' dataset.Id|parse_raven_dataset_id %}" class="button is-outlined is-primary">
+                <span class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m-6 3.75l3 3m0 0l3-3m-3 3V1.5m6 9h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75" />
+                      </svg>
+                </span>
+                <span>
+                    Descargar
+                </span>
+            </a>
+        </div>
+    </div>
+    <div class="card-content">
+        <div class="content">
+            <div class="block">
+                <span class="icon-text">
+                    <span>
+                        Subido por:
+                    </span>
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                    </span>
+                    <span>
+                        <strong>{{ dataset.user_id|uploaded_by_name_user }}</strong><small><a href="">{{dataset.user_id|uploaded_by_user}}</a></small>
+                    </span>
+                </span>
+            </div>
+            <div class="block">
+                <span class="icon-text">
+                    <span>
+                        Tiempo de carga: 
+                    </span>
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                    </span>
+                    <span>
+                        {{ dataset.upload_date|timesince }}
+                    </span>
+                </span>
+            </div>
+            <div class="block">
+                <h2 class="subtitle">Descripción</h2>
+            </div>
+            <div class="block">
+                {{ dataset.description }}
+            </div>
+            <div class="block">
+                <h4 class="subtitle is-4">Prevista</h4>
+            </div>
+            <div class="block">
+                <figure class="image is-1by1">
+                    <img src="data:image/png;base64,{{ dataset_image }}">
+                </figure>
+            </div>
+            <div class="block">
+                <div class="content">
+                    <a href="{% url 'download-dataset' dataset.Id|parse_raven_dataset_id %}" class="button is-primary is-fullwidth">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m-6 3.75l3 3m0 0l3-3m-3 3V1.5m6 9h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75" />
+                              </svg>
+                        </span>
+                        <span>
+                            Descargar
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
