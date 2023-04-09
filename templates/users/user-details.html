@@ -15,7 +15,7 @@
             <div class="media-left">
                 {% if object.photo %}
                     <figure class="image is-64x64">
-                        <img src="{{ object.photo }}" class="is-rounded">
+                        <img src="{% get_media_prefix %}{{ object.photo }}" class="is-rounded">
                     </figure>
                 {% else %}
                 <figure class="image is-64x64">

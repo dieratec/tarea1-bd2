@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
 from ravendb import DocumentStore
@@ -130,6 +131,7 @@ class DatasetDetailView(LoginRequiredMixin, TemplateView):
         return context
 
 
+@login_required
 def download_dataset(request, dataset_id):
     response = HttpResponse(content_type='application/zip')
     zip_filename = f"{dataset_id}"
@@ -175,6 +177,7 @@ def download_dataset(request, dataset_id):
     return response
 
 
+@login_required
 def clone_dataset(request, dataset_id):
 
     with store.open_session() as session:
@@ -205,6 +208,7 @@ def clone_dataset(request, dataset_id):
     return redirect('home')
 
 
+@login_required
 def comment_dataset(request, dataset_id):
 
     if (len(request.POST.get("content")) > 0):
@@ -218,6 +222,7 @@ def comment_dataset(request, dataset_id):
     return redirect('detail-dataset', dataset_id)
 
 
+@login_required
 def reply_comment(request, comment_id):
 
     comment = models.Comment.nodes.get(uid=comment_id)

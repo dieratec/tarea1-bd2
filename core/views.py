@@ -3,10 +3,12 @@ from base64 import b64encode
 
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from .forms import RegistrationForm
+from .forms import RegistrationForm, UpdateProfileForm
 from . import models
 
 from ravendb import DocumentStore
@@ -26,7 +28,7 @@ class SignUpView(CreateView):
     template_name = "registration/signup.html"
 
 
-class UserDetailView(DetailView):
+class UserDetailView(LoginRequiredMixin, DetailView):
 
     model = models.User
     template_name = 'users/user-details.html'
@@ -55,6 +57,7 @@ class UserDetailView(DetailView):
         return context
 
 
+@login_required
 def follow_user(request, user_id):
     collection = client.followers_db
 
@@ -75,6 +78,7 @@ def follow_user(request, user_id):
     return redirect('user-details', user_id)
 
 
+@login_required
 def unfollow_user(request, user_id):
     collection = client.followers_db
 
@@ -87,3 +91,13 @@ def unfollow_user(request, user_id):
         collection.followers.update_one({'belongs_to': request.user.pk}, {"$set": follower_list}, upsert=False)
 
     return redirect('user-details', user_id)
+
+
+class UpdateUserProfileView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = models.User
+    form_class = UpdateProfileForm
+    template_name = 'users/user-profile.html'
+    success_url = '/'
+
+    def test_func(self):
+        return self.get_object().pk == self.request.user.pk

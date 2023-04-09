@@ -135,7 +135,7 @@
             <figure class="media-left">
                 <p class="image is-64x64">
                     {% if comment.user_id|user_profile_pic %}
-                        <img src="{{ comment.user_id|user_profile_pic }}" class="is-rounded">
+                        <img src="{% get_media_prefix %}{{ comment.user_id|user_profile_pic }}" class="is-rounded">
                     {% else %}
                         <img src="{% static 'img/generic-user-profile.webp' %}" class="is-rounded">
                     {% endif %}
@@ -152,7 +152,7 @@
                             <figure class="media-left">
                                 <p class="image is-64x64">
                                     {% if reply.user_id|user_profile_pic %}
-                                        <img src="{{ reply.user_id|user_profile_pic }}" class="is-rounded">
+                                        <img src="{% get_media_prefix %}{{ reply.user_id|user_profile_pic }}" class="is-rounded">
                                     {% else %}
                                         <img src="{% static 'img/generic-user-profile.webp' %}" class="is-rounded">
                                     {% endif %}
@@ -171,7 +171,7 @@
                         <figure class="media-left">
                             <p class="image is-64x64">
                                 {% if user.photo %}
-                                    <img src="{{ user.photo }}" class="is-rounded">
+                                    <img src="{% get_media_prefix %}{{ user.photo }}" class="is-rounded">
                                 {% else %}
                                     <img src="{% static 'img/generic-user-profile.webp' %}" class="is-rounded">
                                 {% endif %}
@@ -205,7 +205,7 @@
         <figure class="media-left">
             <p class="image is-64x64">
                 {% if user.photo %}
-                    <img src="{{ user.photo }}" class="is-rounded">
+                    <img src="{% get_media_prefix %}{{ user.photo }}" class="is-rounded">
                 {% else %}
                     <img src="{% static 'img/generic-user-profile.webp' %}" class="is-rounded">
                 {% endif %}

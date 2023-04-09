@@ -7,4 +7,5 @@ urlpatterns = [
     path("user/<int:pk>/", views.UserDetailView.as_view(), name="user-details"),
     path("follow/<int:user_id>/", views.follow_user, name="follow-user"),
     path("unfollow/<int:user_id>/", views.unfollow_user, name="unfollow-user"),
+    path("profile/<int:pk>/", views.UpdateUserProfileView.as_view(), name="update-profile"),
 ]
