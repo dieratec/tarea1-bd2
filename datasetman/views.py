@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 
 from ravendb import DocumentStore
+from pymongo import MongoClient
 
 from . import forms, models
 
@@ -18,12 +19,18 @@ from core import models as core_models
 store = DocumentStore('http://localhost:8080', 'dataset_store')
 store.initialize()
 
+client = MongoClient('localhost', 27017)
+
 
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        collection = client.followers_db
+
+        follower_list = collection.followers.find_one({'belongs_to': self.request.user.pk})
 
         with store.open_session() as session:
             query = session.query(object_type=models.Dataset)
@@ -35,6 +42,10 @@ class HomeView(LoginRequiredMixin, TemplateView):
                 users = core_models.User.objects.all().filter(username__startswith=self.request.GET.get('username'))
                 user_ids = [user.pk for user in users]
                 query = query.where_in("user_id", user_ids)
+
+            if (self.request.GET.get('following')):
+                if (follower_list):
+                    query = query.where_in("user_id", follower_list['following'])
 
             datasets = list(query)
             images = {}
