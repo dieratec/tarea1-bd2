@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 from base64 import b64encode
 
+from django.shortcuts import redirect
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -167,3 +168,37 @@ def download_dataset(request, dataset_id):
     response['Content-Disposition'] = f"attachment; filename={zip_filename}.zip"
 
     return response
+
+
+def clone_dataset(request, dataset_id):
+
+    with store.open_session() as session:
+        dataset: models.Dataset = session.load(f"datasets/{dataset_id}")  # type: ignore
+        dataset_attachments_details = session.advanced.attachments.get_names(dataset)
+
+        cloned_dataset = models.Dataset(
+                    None,  # type: ignore
+                    request.POST.get('new_name'),
+                    dataset.description,
+                    dataset.user_id,  # type: ignore
+                    datetime.now()
+                )
+
+        session.store(cloned_dataset)
+
+        for attachment_detail in dataset_attachments_details:
+            attachment = session.advanced.attachments.get(dataset.Id, attachment_detail.name)
+            session.advanced.attachments.store(
+                    cloned_dataset,
+                    attachment_detail.name,
+                    attachment.data,
+                    attachment_detail.content_type
+                )
+
+        session.save_changes()
+
+        print(clone_dataset.Id)
+
+    return redirect('home')
+
+

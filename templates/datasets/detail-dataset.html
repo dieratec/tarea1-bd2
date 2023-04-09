@@ -14,6 +14,21 @@
             {{ dataset.name }}
         </h1>
         <div class="card-header-icon">
+            {% if dataset.user_id == user.pk %}
+                <div class="mr-2">
+                    <form method="post" action="{% url 'clone-dataset' dataset.Id|parse_raven_dataset_id %}">
+                        {% csrf_token %}
+                        <div class="field has-addons">
+                            <div class="control">
+                                <button type="submit" class="button is-info">Clonar</button>
+                            </div>
+                            <div class="control">
+                                <input type="text" name="new_name" class="input" placeholder="Nuevo nombre">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
             <a href="{% url 'download-dataset' dataset.Id|parse_raven_dataset_id %}" class="button is-outlined is-primary">
                 <span class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
