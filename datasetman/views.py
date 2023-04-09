@@ -112,11 +112,14 @@ class DatasetDetailView(LoginRequiredMixin, TemplateView):
         dataset_id = kwargs['dataset_id']
 
         with store.open_session() as session:
-            dataset = session.load(f"datasets/{dataset_id}")
+            dataset: models.Dataset = session.load(f"datasets/{dataset_id}")  # type: ignore
             dataset.upload_date = datetime.strptime(dataset.upload_date[:-3], "%Y-%m-%dT%H:%M:%S.%f")  # type: ignore
             image = b64encode(session.advanced.attachments.get(dataset.Id, "image.png").data).decode()  # type: ignore
             context['dataset'] = dataset
             context['dataset_image'] = image
+
+            if (self.request.user.pk == dataset.user_id):
+                context['download_list'] = core_models.Download.objects.all().filter(dataset_id=dataset.Id)
 
         return context
 

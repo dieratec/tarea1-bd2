@@ -67,6 +67,27 @@
             <div class="block">
                 <h4 class="subtitle is-4">Prevista</h4>
             </div>
+            {% if download_list %}
+                {% for download in download_list %}
+                    <div class="notification is-info">
+                        <h2 class="subtitle">
+                            Descargas realizadas por otros usuarios
+                        </h2>
+                        <div class="block">
+                            <span>
+                                <strong>Descargado por: </strong> <a href="{% url 'user-details' download.download_by.pk %}">{{ download.download_by.username }}</a>
+                            </span>
+                            <span>
+                                <strong>Hace:</strong> {{ download.download_at|timesince }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+            {% else %}
+                <div class="block notification is-warning">
+                    <h2 class="subtitle is-4">Nadie ha descargado el dataset aún</h2>
+                </div>
+            {% endif %}
             <div class="block">
                 <figure class="image is-1by1">
                     <img src="data:image/png;base64,{{ dataset_image }}">
