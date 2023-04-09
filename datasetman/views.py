@@ -119,6 +119,11 @@ class DatasetDetailView(LoginRequiredMixin, TemplateView):
             context['dataset'] = dataset
             context['dataset_image'] = image
 
+            context['comments'] = []
+            comments = models.Comment.nodes.filter(dataset_id=dataset_id)
+            for comment in comments:
+                context['comments'].append(comment)
+
             if (self.request.user.pk == dataset.user_id):
                 context['download_list'] = core_models.Download.objects.all().filter(dataset_id=dataset.Id)
 
@@ -197,8 +202,33 @@ def clone_dataset(request, dataset_id):
 
         session.save_changes()
 
-        print(clone_dataset.Id)
-
     return redirect('home')
 
 
+def comment_dataset(request, dataset_id):
+
+    if (len(request.POST.get("content")) > 0):
+        comment = models.Comment(
+            content=request.POST.get("content"),
+            user_id=request.user.pk,
+            dataset_id=dataset_id,
+        )
+        comment.save()
+
+    return redirect('detail-dataset', dataset_id)
+
+
+def reply_comment(request, comment_id):
+
+    comment = models.Comment.nodes.get(uid=comment_id)
+
+    if (len(request.POST.get("content")) > 0):
+        reply = models.Reply(
+            content=request.POST.get("content"),
+            user_id=request.user.pk,
+        ).save()
+
+        reply.parent_comment.connect(comment)
+        reply.save()
+
+    return redirect('detail-dataset', comment.dataset_id)

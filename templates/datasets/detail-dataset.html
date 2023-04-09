@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load dataset_filters %}
 
 {% block title %}Detalles Dataset / {{ dataset.Id|parse_raven_dataset_id }}{% endblock %}
@@ -127,4 +128,107 @@
         </div>
     </div>
 </div>
+
+<div class="box block">
+    {% for comment in comments %}
+        <article class="media">
+            <figure class="media-left">
+                <p class="image is-64x64">
+                    {% if comment.user_id|user_profile_pic %}
+                        <img src="{{ comment.user_id|user_profile_pic }}" class="is-rounded">
+                    {% else %}
+                        <img src="{% static 'img/generic-user-profile.webp' %}" class="is-rounded">
+                    {% endif %}
+                </p>
+            </figure>
+            <div class="media-content">
+                <div class="content">
+                    <strong>{{ comment.user_id|uploaded_by_name_user }}</strong> <small>{{ comment.user_id|uploaded_by_user }}</small> <small>{{ comment.created_at|timesince }}</small>
+                    <br>
+                    {{ comment.content }}
+                    <br>
+                    {% for reply in comment.replies %}
+                        <article class="media">
+                            <figure class="media-left">
+                                <p class="image is-64x64">
+                                    {% if reply.user_id|user_profile_pic %}
+                                        <img src="{{ reply.user_id|user_profile_pic }}" class="is-rounded">
+                                    {% else %}
+                                        <img src="{% static 'img/generic-user-profile.webp' %}" class="is-rounded">
+                                    {% endif %}
+                                </p>
+                            </figure>
+                            <div class="media-content">
+                                <div class="content">
+                                    <strong>{{ reply.user_id|uploaded_by_name_user }}</strong> <small>{{ reply.user_id|uploaded_by_user }}</small> <small>{{ reply.created_at|timesince }}</small>
+                                    <br>
+                                    {{ reply.content }}
+                            </div>
+                        </article>
+                        <br>
+                    {% endfor %}
+                    <article class="media">
+                        <figure class="media-left">
+                            <p class="image is-64x64">
+                                {% if user.photo %}
+                                    <img src="{{ user.photo }}" class="is-rounded">
+                                {% else %}
+                                    <img src="{% static 'img/generic-user-profile.webp' %}" class="is-rounded">
+                                {% endif %}
+                            </p>
+                        </figure>
+                        <div class="media-content">
+                            <form action="{% url 'reply-comment-dataset' comment.uid %}" method="post">
+                                {% csrf_token %}
+                                <div class="field">
+                                    <p class="control">
+                                        <textarea name="content" class="textarea" placeholder="Crea una respuesta"></textarea>
+                                    </p>
+                                </div>
+                                <nav class="level">
+                                    <div class="level-left">
+                                    <div class="level-item">
+                                        <button type="submit" class="button is-link">Responder</a>
+                                    </div>
+                                    </div>
+                                </nav>
+                            </form>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </article>
+    {% empty %}
+        <h2 class="subtitle is-4">Este dataset no tiene comentarios</h2>
+    {% endfor %}
+    <article class="media">
+        <figure class="media-left">
+            <p class="image is-64x64">
+                {% if user.photo %}
+                    <img src="{{ user.photo }}" class="is-rounded">
+                {% else %}
+                    <img src="{% static 'img/generic-user-profile.webp' %}" class="is-rounded">
+                {% endif %}
+            </p>
+        </figure>
+        <div class="media-content">
+            <form action="{% url 'comment-dataset' dataset.Id|parse_raven_dataset_id %}" method="post">
+                {% csrf_token %}
+                <div class="field">
+                    <p class="control">
+                        <textarea name="content" class="textarea" placeholder="Crea un comentario"></textarea>
+                    </p>
+                </div>
+                <nav class="level">
+                    <div class="level-left">
+                    <div class="level-item">
+                        <button type="submit" class="button is-info">Comentar</a>
+                    </div>
+                    </div>
+                </nav>
+            </form>
+        </div>
+    </article>
+</div>
+
 {% endblock %}

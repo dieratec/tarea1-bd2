@@ -31,7 +31,13 @@ def uploaded_by_user(value):
     return user.username
 
 
+def user_profile_pic(value):
+    user = models.User.objects.get(pk=value)
+    return user.photo
+
+
 register.filter('parse_raven_dataset_id', parse_raven_dataset_id)
 register.filter('get_dict_value', get_dict_value)
 register.filter('uploaded_by_name_user', uploaded_by_name_user)
 register.filter('uploaded_by_user', uploaded_by_user)
+register.filter('user_profile_pic', user_profile_pic)
