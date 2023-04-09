@@ -39,7 +39,7 @@
                           </svg>
                     </span>
                     <span>
-                        <strong>{{ dataset.user_id|uploaded_by_name_user }}</strong><small><a href="">{{dataset.user_id|uploaded_by_user}}</a></small>
+                        <strong>{{ dataset.user_id|uploaded_by_name_user }}</strong> <small><a href="{% url 'user-details' dataset.user_id %}">{{dataset.user_id|uploaded_by_user}}</a></small>
                     </span>
                 </span>
             </div>
