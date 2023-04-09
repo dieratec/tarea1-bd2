@@ -18,10 +18,11 @@ class UpdateProfileForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "photo", "birthdate")
+        fields = ("first_name", "last_name", "photo", "birthdate", "email")
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'input'}),
             'last_name': forms.TextInput(attrs={'class': 'input'}),
             'photo': forms.FileInput(attrs={'class': 'file-input'}),
             'birthdate': forms.DateInput(attrs={'class': 'input', 'type': 'date'}, format="%Y-%m-%d"),
+            "email": forms.TextInput(attrs={'class': 'input'}),
         }
