@@ -3,14 +3,43 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
+<div class="block">
+  <h1 class="title">Crear cuenta</h1>
+</div>
 <div class="box block">
-  <div class="block">
-    <h2>Sign Up</h2>
+  <div class="notification is-warning">
+    Una vez dentro del sistema podrá personalizar su perfil
   </div>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_div }}
-    <button type="submit">Sign Up</button>
+    <div class="field">
+      <div class="control">
+        <label for="{{ form.username.id_for_label }}" class="label">Nombre de usuario:</label>
+        {{ form.username.help_text }}
+        {{ form.username }}
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <div class="notification is-info">
+          {{ form.password1.help_text }}
+        </div>
+        <label for="{{ form.password1.id_for_label }}" class="label">Contraseña:</label>
+        {{ form.password1 }}
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <div class="control">
+          <label for="{{ form.password1.id_for_label }}" class="label">Repetir contraseña:</label>
+          {{ form.password2.help_text }}
+          {{ form.password2 }}
+        </div>
+      </div>
+    </div>
+    <button class="button is-primary" type="submit">Crear</button>
+    <a href="{% url 'login' %}" class="button is-danger">Cancelar</a>
   </form>
 </div>
 {% endblock %}
