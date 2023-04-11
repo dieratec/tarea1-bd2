@@ -30,3 +30,10 @@ $ poetry install
 ```
 
 Quien quiera correr la aplicación también debe tener un conocimiento básico de django, correr las migraciones en MariaDB y correr la aplicación.
+
+## Razones tras la base de datos
+
+**RavenDB**: Se pueden guardar archivos fácilmente y agregar datos de forma sencilla, se pueden adjuntar multiples archivos a un solo documento, se puede usar clases para abstraer sus atributos.
+**Neo4j**: Excelenete para manejo de mensajes debido a su sistema de nodos, se vincularon los comentarios con los datastes, y las respuestas con los comentarios, se pueden usar clases también para abstraer sus atributos.
+**MaridaDB**: Robusta base de datos SQL, simple y bien conocida, ya sabía usarla.
+**MongoDB**: Se pueden manejar documentos de forma rápida, la estructura flexible ayuda a crear datos rápidos
